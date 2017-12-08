@@ -46,7 +46,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'blog'
+    'blog',
+    'django_summernote'
 ]
 
 
@@ -131,7 +132,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # LANGUAGE_CODE = 'en-us'
 LANGUAGE_CODE = 'zh_Hans'  # 配置后台管理系统为中文
 
-TIME_ZONE = 'UTC'
+# TIME_ZONE = 'UTC'  # 国际协调时，不是任何的时区，而是一个国际通用时间。
+TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True
 

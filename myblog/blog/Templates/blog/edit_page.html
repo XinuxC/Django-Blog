@@ -1,34 +1,133 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns="http://www.w3.org/1999/html">
   <head>
-  </head>
-<body>
-<form action="{% url 'blog:edit_action' %}" method="post">
-        {% csrf_token %}
-        {% if article %}
-        <input type="hidden" name="article_id" value="{{ article.id }}"/>
-            <label>文章标题
-                <input type="text" name="title" value="{{ article.title }}"/>
-            </label>
-            <br/>
-            <label>文章内容
-                <input type="text" name="content" value="{{ article.content }}"/>
-            </label>
-            <br/>
+    {% load static %}
+    <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="description" content="">
+      <meta name="author" content="">
 
-        {% else %}
+      <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}">
+      <title>ChENMo's - Live A Little </title>
+      <!--{% load static %}-->
+      <!-- Bootstrap core CSS -->
+      <!--<link href="assets/css/bootstrap.css" rel="stylesheet">-->
+      <link href="{% static '/css/bootstrap.css' %}" rel="stylesheet">
+
+
+      <!-- Custom styles for this template -->
+      <!--<link href="assets/css/main.css" rel="stylesheet">-->
+      <link href="{% static '/css/main.css' %}" rel="stylesheet">
+
+      <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+      <script src="{% static '/js/hover.zoom.js' %}"></script>
+      <script src="{% static '/js/hover.zoom.conf.js' %}"></script>
+
+      <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+      <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+      <![endif]-->
+      <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}">
+      <link href="{% static '/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
+      <link href="{% static '/css/froala_editor.min.css' %}" rel="stylesheet" type="text/css">
+
+      <style>
+          body {
+              text-align: center;
+          }
+
+          section {
+              width: 80%;
+              margin: auto;
+              text-align: left;
+          }
+      </style>
+  </head>
+
+  <body>
+    <div class="navbar navbar-inverse navbar-static-top">
+        <div class="container">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">ChENMo's</a>
+          </div>
+          <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+              <!--<li><a href="work.html">Work</a></li>-->
+              <!--<li><a href="about.html">About</a></li>-->
+              <li><a class="navbar-brand" href="{% url 'blog:blogspage' %}">Blog</a></li>
+              <!--<li><a href="contact.html">Contact</a></li>-->
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+
+
+    <div>
+        <section id="editor">
+          <form action="{% url 'blog:edit_action' %}" method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          {% if article %}
+          <input type="hidden" name="article_id" value="{{ article.id }}"/>
+          <label>文章标题
+            <input type="text" name="title" value="{{ article.title }}"/>
+          </label>
+          <br/>
+          <label>文章内容
+            <input type="text" name="content" value="{{ article.content }}"/>
+            <!--<textarea id='edit1' name="content"  ></textarea>-->
+          </label>
+          <input type="file" name="myfile" />
+          <br/>
+
+          {% else %}
             <input type="hidden" name="article_id" value="0"/>
             <label>文章标题
-                <input type="text" name="title"/>
-            </label>
-            <br/>
+                    <input type="text" name="title"/>
+                </label><br/>
             <label>文章内容
-                <input type="text" name="content"/>
+            <!--<textarea id='edit' name="content" style="margin-top: 30px;">-->
+            <!--</textarea>-->
+              <input type="text" name="content" value="{{ article.content }}"/>
             </label>
+            <input type="file" name="myfile" />
             <br/>
-        {% endif %}
-        <input type="submit" value="提交">
-</form>
-<li><a href="{% url 'blog:blogspage' %}"># Back</a></li>
-</body>
+           {% endif %}
+          <input type="submit">
+          </form>
+        </section>
+      </div>
+
+    <script src="{% static '/js/libs/jquery-1.11.1.min.js' %}"></script>
+    <script src="{% static '/js/froala_editor.min.js' %}"></script>
+    <!--[if lt IE 9]>
+    <script src="../js/froala_editor_ie8.min.js"></script>
+    <![endif]-->
+    <script src="{% static '/js/plugins/tables.min.js' %}"></script>
+    <script src="{% static '/js/plugins/lists.min.js' %}"></script>
+    <script src="{% static '/js/plugins/colors.min.js' %}"></script>
+    <script src="{% static '/js/plugins/media_manager.min.js' %}"></script>
+    <script src="{% static '/js/plugins/font_family.min.js' %}"></script>
+    <script src="{% static '/js/plugins/font_size.min.js' %}"></script>
+    <script src="{% static '/js/plugins/block_styles.min.js' %}"></script>
+    <script src="{% static '/js/plugins/video.min.js' %}"></script>
+
+    <script>
+        $(function(){
+            $('#edit')
+              .editable({
+                inlineMode: false,
+                theme: 'grey',
+                height: '200px' //高度
+              })
+        });
+    </script>
+    <script src="{% static '/js/bootstrap.min.js' %}"></script>
+  </body>
 </html>

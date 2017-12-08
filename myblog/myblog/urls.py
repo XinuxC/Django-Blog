@@ -22,7 +22,6 @@ from blog import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('blog.urls')),  # 加上index 访问网页的时候 ip:port/index
-    # path('', bv.index),  # 直接访问ip:port就能得到index的响应
-    # path('index/', bv.index),
+    path(r'summernote/', include('django_summernote.urls')),
 
 ]

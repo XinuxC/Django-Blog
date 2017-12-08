@@ -1,5 +1,7 @@
 from django.shortcuts import render
 
+from django.conf import settings
+import os
 # Create your views here.
 '''
 执行响应的代码所在模块
@@ -41,20 +43,31 @@ def edit_page(request,article_id):
         return render(request,'blog/edit_page.html',{'article':article})
 
 
+def save_files(file):
+    with open(settings.BASE_DIR + os.sep + r'blog\static\upload\%s' % file.name, 'wb') as f:
+        for chunk in file.chunks():
+            f.write(chunk)
+
 def edit_action(request):
     title = request.POST.get('title','TITLE')  # 获取post过来的表单数据
     content = request.POST.get('content','CONTENT')
+    file = request.FILES.get('myfile',None)
     article_id = request.POST.get('article_id','0')  #article_id默认为0
-    if str(article_id) == '0':
-        models.Article.objects.create(title = title,content = content)  # 连接数据库增加文章
+    if str(article_id) == '0' :
+        save_files(file)
+        models.Article.objects.create(title = title,content = content,filename = file.name)  # 连接数据库增加文章
         articles = models.Article.objects.all()
         return render(request,'blog/blog.html',{'articles':articles}) # 提交完成后返回博客列表页面
     else:
         article = models.Article.objects.get(pk=article_id)
         article.title = title
         article.content = content
+        article.filename = file.name
         article.save()
-        return render(request,'blog/article_page.html',{'article': article})
+        return render(request, 'blog/article_page.html', {'article': article})
+
+
+
 
 def delete_article(request,article_id):
     models.Article.objects.filter(pk=article_id).delete()  # 删除数据库中对应id的文章
