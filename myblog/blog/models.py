@@ -10,7 +10,7 @@ class Article(models.Model):
     title = models.CharField(max_length=32,default='title')
     content = models.TextField(null=True)
     filename = models.CharField(max_length=50,default=None,null=True)
-    time = models.DateTimeField(auto_now=True)
+    time = models.DateTimeField(auto_now=True)  # 将auto_now改为null=True后可以在admin后台管理中修改文章发布时间
     # 修改后台管理系统中数据默认显示名称
     def __str__(self):
         return self.title
