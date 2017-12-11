@@ -16,12 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path , include
 
-from blog import views
-#import blog.views as bv
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('blog.urls')),  # 加上index 访问网页的时候 ip:port/index
-    path(r'summernote/', include('django_summernote.urls')),
+    # path(r'summernote/', include('django_summernote.urls')),
 
 ]

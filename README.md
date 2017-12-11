@@ -1,2 +1,2 @@
 # Django-Blog
-Persional blog
+Personal blog
