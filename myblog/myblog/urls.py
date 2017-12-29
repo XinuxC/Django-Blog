@@ -21,6 +21,5 @@ from django.urls import path , include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('blog.urls')),  # 加上index 访问网页的时候 ip:port/index
-    # path(r'summernote/', include('django_summernote.urls')),
 
 ]

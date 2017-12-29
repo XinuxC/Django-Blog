@@ -32,7 +32,7 @@ SECRET_KEY = 'du2q=6yo@p7aw9zl%o$=6bou8o7g521pwm0rgep21ky-n2$p04'
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.0.102','localhost','127.0.0.1']  # 允许的hosts列表
+ALLOWED_HOSTS = ['172.16.100.99','localhost','127.0.0.1']  # 允许的hosts列表
 
 
 # Application definition
@@ -147,4 +147,3 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 '''静态文件地址'''
 STATIC_URL = '/static/'
-
