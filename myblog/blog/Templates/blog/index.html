@@ -24,6 +24,10 @@
     <script src="{% static '/js/hover.zoom.js' %}"></script>
     <script src="{% static '/js/hover.zoom.conf.js' %}"></script>
 
+    <!--搜索建议-->
+    <!--<link href="{% static 'css/style.css' %}" rel="stylesheet" type="text/css" />-->
+    <!--<link href="{% static 'css/index.css' %}" rel="stylesheet" type="text/css" />  -->
+
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -67,7 +71,8 @@
 					<img src="{% static '/img/user.png' %}" width="150px" height="150px" alt="ChENMo">
 					<h1>Hello World</h1>
 					<p>Hello everyone. I'm ChENMo, An Ops,MySQL DBA and Python Developer.</p>
-					<p>Welcome blablabla</p><br/>
+					<p>You can say I'm a Dreamer</p>
+					<p>But I'm not the Only One</p><br/>
 					<p>Special thanks to <a href="http://www.bootcss.com/">Bootstrap</a>. Like always, you can use their Framework in any project freely. Share it with your friends.</p>
 				
 				</div><!-- /col-lg-8 -->
@@ -76,26 +81,13 @@
 	</div><!-- /ww -->
     <div class="copyrights">Collect from <a href="#" >ChENMo</a></div>
 	
-	
-	<!-- +++++ Projects Section +++++ -->
-	<!--作品集-->
+
 	<div class="container pt">
-		<!--<div class="row mt centered">-->
-			<!--<div class="col-lg-4">-->
-				<!--<a class="zoom green" href="work01.html"><img class="img-responsive" src="{% static '/img/portfolio/port01.jpg' %}" alt="" /></a>-->
-				<!--<p>APE</p>-->
-			<!--</div>-->
-			<!--<div class="col-lg-4">-->
-				<!--<a class="zoom green" href="work01.html"><img class="img-responsive" src="{% static '/img/portfolio/port02.jpg' %}" alt="" /></a>-->
-				<!--<p>RAIDERS</p>-->
-			<!--</div>-->
-			<!--<div class="col-lg-4">-->
-				<!--<a class="zoom green" href="work01.html"><img class="img-responsive" src="{% static '/img/portfolio/port03.jpg' %}" alt="" /></a>-->
-				<!--<p>VIKINGS</p>-->
-			<!--</div>-->
-		<!--</div>&lt;!&ndash; /row &ndash;&gt;-->
 		<div class="row mt centered">
-			<input type="text" class="form-control input-lg"><span class="input-group-addon btn btn-primary">搜索</span>
+			<input type="text" class="form-control input-lg searchInput">
+            <!--<input type="button" class="searchButton input-group-addon btn btn-primary" onclick="add_search()" />-->
+            <span class="input-group-addon btn btn-primary searchButton" onclick="add_search()">搜索</span>
+            <ul class="dataList"></ul>
 		</div><!-- /row -->
 	</div><!-- /container -->
 	
@@ -140,4 +132,116 @@
     <script src="{% static '/js/bootstrap.min.js' %}"></script>
 
   </body>
+  <!--搜索建议-->
+  <script type="text/javascript" src="{% static '/js/jquery.js' %}"></script>
+  <script type="text/javascript" src="{% static '/js/global.js' %}"></script>
+  <script type="text/javascript">
+    var suggest_url = "{% url 'blog:suggest' %}"
+    var search_url = "{% url 'blog:searchview' %}"
+
+
+	$('.searchList').on('click', '.searchItem', function(){
+		$('.searchList .searchItem').removeClass('current');
+		$(this).addClass('current');
+	});
+
+    function removeByValue(arr, val) {
+      for(var i=0; i<arr.length; i++) {
+        if(arr[i] == val) {
+          arr.splice(i, 1);
+          break;
+        }
+      }
+    }
+
+
+    <!--// 搜索建议-->
+    $(function(){
+        $('.searchInput').bind(' input propertychange ',function(){
+            var searchText = $(this).val();
+            var tmpHtml = ""
+            $.ajax({
+                cache: false,
+                type: 'get',
+                dataType:'json',
+                url:suggest_url+"?s="+searchText,
+                async: true,
+                success: function(data) {
+                    for (var i=0;i<data.length;i++){
+                        tmpHtml += '<li><a href="'+search_url+'?q='+data[i]+'">'+data[i]+'</a></li>'
+                    }
+                    $(".dataList").html("")
+                    $(".dataList").append(tmpHtml);
+                    if (data.length == 0){
+                        $('.dataList').hide()
+                    }else {
+                        $('.dataList').show()
+                    }
+                }
+            });
+        } );
+    })
+
+    hideElement($('.dataList'), $('.searchInput'));
+
+</script>
+<script>
+    var searchArr;
+    <!--//定义一个search的，判断浏览器有无数据存储（搜索历史）-->
+    if(localStorage.search){
+    <!--//如果有，转换成 数组的形式存放到searchArr的数组里（localStorage以字符串的形式存储，所以要把它转换成数组的形式）-->
+        searchArr= localStorage.search.split(",")
+    }else{
+    <!--//如果没有，则定义searchArr为一个空的数组-->
+        searchArr = [];
+    }
+    <!--//把存储的数据显示出来作为搜索历史-->
+    MapSearchArr();
+
+    function add_search(){
+        var val = $(".searchInput").val();
+        if (val.length>=2){
+            <!--//点击搜索按钮时，去重-->
+            KillRepeat(val);
+            <!--//去重后把数组存储到浏览器localStorage-->
+            localStorage.search = searchArr;
+            <!--//然后再把搜索内容显示出来-->
+            MapSearchArr();
+        }
+
+        window.location.href=search_url+'?q='+val+"&s_type="+$(".searchItem.current").attr('data-type')
+
+    }
+
+    function MapSearchArr(){
+        var tmpHtml = "";
+        var arrLen = 0
+        if (searchArr.length >= 5){
+            arrLen = 5
+        }else {
+            arrLen = searchArr.length
+        }
+        for (var i=0;i<arrLen;i++){
+            tmpHtml += '<a href="'+search_url+'?q='+searchArr[i]+'">'+searchArr[i]+'</a>'
+        }
+        $(".mysearch .all-search").html(tmpHtml);
+    }
+    <!--//去重-->
+    function KillRepeat(val){
+        var kill = 0;
+        for (var i=0;i<searchArr.length;i++){
+            if(val===searchArr[i]){
+                kill ++;
+            }
+        }
+        if(kill<1){
+            searchArr.unshift(val);
+        }else {
+            removeByValue(searchArr, val)
+            searchArr.unshift(val)
+        }
+    }
+
+
+</script>
 </html>

@@ -10,7 +10,7 @@
 from django.contrib import admin
 from django.urls import path
 from . import views
-# admin.autodiscover()
+
 
 app_name = 'blog'
 urlpatterns = [
@@ -21,6 +21,6 @@ urlpatterns = [
     path('edit/<slug:article_id>/', views.edit_page ,name='edit_page'),
     path('edit_action/', views.edit_action ,name='edit_action'),
     path('delete/<slug:article_id>/', views.delete_article ,name='delete_article'),
-
-
+    path('suggest', views.SearchSuggest.as_view(), name='suggest'),
+    path('searchview', views.SearchView.as_view(),name="searchview"),
 ]
